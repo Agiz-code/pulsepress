@@ -8,7 +8,8 @@ import {
   upsertOxylabsSchedule,
 } from "../supabase/queries/oxylabs";
 
-const DEFAULT_CRON = "0 * * * *";
+// Hobby-compatible daily default. Upgrade switch: change to "0 * * * *" for hourly Oxylabs runs.
+const DEFAULT_CRON = "0 0 * * *";
 
 function getScheduleCron(): string {
   return process.env.OXYLABS_SCHEDULE_CRON ?? DEFAULT_CRON;

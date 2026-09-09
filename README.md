@@ -6,7 +6,18 @@ Before enabling it:
 
 1. Run `supabase/schema.sql` in the Supabase SQL Editor, including the `oxylabs_schedules` and `oxylabs_schedule_runs` tables.
 2. Configure server-side variables: `OXY_WSA_USERNAME`, `OXY_WSA_PASSWORD`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `BIASLY_ADMIN_SECRET`, and `OPENAI_API_KEY`.
-3. Deploy with `CRON_SECRET` configured by Vercel. The checked-in `vercel.json` calls `/api/cron/pipeline` at 15 minutes past every hour.
+3. Deploy with `CRON_SECRET` configured by Vercel. The checked-in `vercel.json` calls `/api/cron/pipeline` daily at `00:15 UTC` for Vercel Hobby.
+	 After upgrading to Vercel Pro, replace the schedule in `vercel.json` with the commented hourly value below:
+
+	 ```jsonc
+	 {
+		 "path": "/api/cron/pipeline",
+		 // Hobby: "schedule": "15 0 * * *",
+		 "schedule": "15 * * * *"
+	 }
+	 ```
+
+	 Also set `OXYLABS_SCHEDULE_CRON=0 * * * *` in the deployed environment and run the schedule sync endpoint again.
 4. Create the Oxylabs schedules once:
 
 	```powershell

@@ -1,0 +1,4 @@
+export type BiasBreakdown = { left: number; center: number; right: number }; 
+export type SourceEntry = { name: string; bias: "left" | "center" | "right" }; 
+export type RelatedStory = { id: string; category: string; location: string; title: string; imageUrl: string; publishedDate: string; readTime: string }; 
+export type DetailArticle = { id: string; category: string; location: string; title: string; author: string; publishedDate: string; readTime: string; imageUrl: string; imageCaption: string; bias: BiasBreakdown; sources: number; body: string[]; overallBiasLabel: "left" | "center" | "right" | "mixed" | "unclear"; overallBiasPercent: number; summary: string[]; summaryDate: string; summaryReadTime: string; sourceList: SourceEntry[]; relatedIds: string[]; relatedStories?: RelatedStory[]; };

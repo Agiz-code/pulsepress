@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { AuthActions } from "./auth-actions";
 
 const navItems = [
-  { label: "Home", href: "#top", active: true },
-  { label: "Top News", href: "#top-news-title" },
+  { label: "Home", href: "/", active: true },
+  { label: "Top News", href: "/#top-news-title" },
 ];
 
 export function SiteHeader({ brand }: { brand: React.ReactNode }) {

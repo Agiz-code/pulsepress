@@ -14,6 +14,10 @@ export type ArticleInsert = {
   analyzed_at?: string | null;
 };
 
+export type RawScrapedArticle = Pick<ArticleRow, "id" | "title" | "original_url" | "canonical_url" | "image_url" | "published_at" | "raw_text" | "scraped_at"> & {
+  sourceName: string;
+};
+
 function toHomeArticle(article: ArticleRow & { article_analyses?: ArticleAnalysisRow[] | null; sources?: Array<{ name: string }> | null }): HomeArticle {
   const analysis = article.article_analyses?.[0];
   return {
@@ -90,6 +94,41 @@ export async function getArticles(limit = 12): Promise<HomeArticle[]> {
 
   const rows = (data ?? []) as Array<ArticleRow & { article_analyses?: ArticleAnalysisRow[] | null; sources?: Array<{ name: string }> | null }>;
   return rows.map((article) => toHomeArticle(article));
+}
+
+export async function getRawScrapedArticles(): Promise<RawScrapedArticle[]> {
+  const supabase = createServiceRoleClient();
+  const pageSize = 500;
+  const articles: RawScrapedArticle[] = [];
+
+  for (let offset = 0; ; offset += pageSize) {
+    const { data, error } = await supabase
+      .from("articles")
+      .select("id, title, original_url, canonical_url, image_url, published_at, raw_text, scraped_at, sources(name)")
+      .order("published_at", { ascending: false })
+      .range(offset, offset + pageSize - 1);
+
+    if (error) {
+      throw error;
+    }
+
+    const rows = (data ?? []) as Array<ArticleRow & { sources?: Array<{ name: string }> | null }>;
+    articles.push(...rows.map((article) => ({
+      id: article.id,
+      title: article.title,
+      original_url: article.original_url,
+      canonical_url: article.canonical_url,
+      image_url: article.image_url,
+      published_at: article.published_at,
+      raw_text: article.raw_text,
+      scraped_at: article.scraped_at,
+      sourceName: article.sources?.[0]?.name ?? "News",
+    })));
+
+    if (rows.length < pageSize) {
+      return articles;
+    }
+  }
 }
 
 export async function getPendingAnalysisArticles(limit = 5): Promise<ArticleRow[]> {

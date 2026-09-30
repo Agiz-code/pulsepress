@@ -1,15 +1,18 @@
 'use client';
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { AuthActions } from "./auth-actions";
 
 const navItems = [
-  { label: "Home", href: "/", active: true },
+  { label: "Home", href: "/", activePath: "/" },
   { label: "Top News", href: "/#top-news-title" },
+  { label: "Original News", href: "/original-news", activePath: "/original-news" },
 ];
 
 export function SiteHeader({ brand }: { brand: React.ReactNode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!isMenuOpen) {
@@ -46,7 +49,7 @@ export function SiteHeader({ brand }: { brand: React.ReactNode }) {
 
         <nav className="main-nav" aria-label="Primary navigation">
           {navItems.map((item) => (
-            <a key={item.label} className={item.active ? "is-active" : ""} href={item.href}>
+            <a key={item.label} className={item.activePath === pathname ? "is-active" : ""} href={item.href}>
               {item.label}
             </a>
           ))}
@@ -59,7 +62,7 @@ export function SiteHeader({ brand }: { brand: React.ReactNode }) {
 
       <nav id="mobile-navigation" className={`mobile-nav ${isMenuOpen ? "is-open" : ""}`} aria-label="Mobile navigation">
         {navItems.map((item) => (
-          <a key={item.label} className={item.active ? "is-active" : ""} href={item.href} onClick={() => setIsMenuOpen(false)}>
+          <a key={item.label} className={item.activePath === pathname ? "is-active" : ""} href={item.href} onClick={() => setIsMenuOpen(false)}>
             {item.label}
           </a>
         ))}

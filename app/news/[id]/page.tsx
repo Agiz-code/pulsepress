@@ -57,7 +57,7 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
             </div>
 
             <figure className="overflow-hidden rounded-[28px] bg-slate-100 shadow-sm">
-              <div className="relative aspect-[16/9] w-full">
+              <div className="relative aspect-video w-full">
                 <Image src={article.imageUrl} alt={article.title} fill className="object-cover" priority />
               </div>
               <figcaption className="px-5 py-4 text-sm leading-6 text-slate-600">
